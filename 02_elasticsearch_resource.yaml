@@ -1,16 +1,17 @@
 apiVersion: elasticsearch.k8s.elastic.co/v1alpha1
 kind: Elasticsearch
 metadata:
-  name: elasticsearch-sample
+  name: es-log
+  namespace: elastic-system
 spec:
   version: "7.3.0"
   http:
     tls:
       selfSignedCertificate:
         subjectAltNames:
-        - dns: elasticsearch-sample-es-http.elastic-system.svc.cluster.local
-        - dns: elasticsearch-sample-es-http.elastic-system.svc
-        - dns: elasticsearch-sample-es-http
+        - dns: es-log-es-http.elastic-system.svc.cluster.local
+        - dns: es-log-es-http.elastic-system.svc
+        - dns: es-log-es-http
   nodes:
   - name: quickstart
     config:
@@ -26,6 +27,9 @@ spec:
             request:
               memory: 10Gi
               cpu: 8
+          env:
+          - name: ES_JAVA_OPTS
+            value: "-Xms6g -Xmx6g"
     nodeCount: 5
     volumeClaimTemplates:
     - metadata:
@@ -33,6 +37,7 @@ spec:
       spec:
         accessModes:
         - ReadWriteOnce
+        storageClassName: yc-network-ssd
         resources:
           requests:
             storage: 300Gi
