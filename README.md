@@ -10,7 +10,7 @@ With following specific details:
 
 * Leveraging SSD class storage of Yandex Managed Kubernetes service for persisting Elasticsearch data, sized for 300Gb each.
 * Using 5 nodes with master+data+ingest roles
-* Configured resource limits and request with tuned java options to utilize 6GB memory. Leverage this [article](https://www.elastic.co/guide/en/elasticsearch/reference/current/heap-size.html) for configure suitable resource usage of your cluster.
+* Configured resource limits and request with tuned java options to utilize 6GB memory. Leverage this [article](https://www.elastic.co/guide/en/elasticsearch/reference/current/heap-size.html) for configure suitable resource usage for your cluster.
 ```yaml
 - name: elasticsearch
   resources:
