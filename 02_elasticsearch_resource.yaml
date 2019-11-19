@@ -21,7 +21,7 @@ spec:
         containers:
         - name: elasticsearch
           resources:
-            request:
+            requests:
               memory: 8Gi
               cpu: 4
             limits:
