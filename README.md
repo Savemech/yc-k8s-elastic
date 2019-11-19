@@ -8,9 +8,9 @@ This repository was used as a starting point: [cloud-on-k8s](https://github.com/
 
 With following specific details:
 
-* Leveraging SSD class storage of Yandex Managed Kubernetes service for persisting Elasticsearch data, sized for 300Gb each.
+* SSD class storage of Yandex Managed Kubernetes service for persisting Elasticsearch data, sized for 300Gb each.
 * Using 5 nodes with master+data+ingest roles
-* Configured resource limits and request with tuned java options to utilize 6GB memory. Leverage this [article](https://www.elastic.co/guide/en/elasticsearch/reference/current/heap-size.html) for configure suitable resource usage for your cluster.
+* Configured resource limits and request with tuned java options to utilize 6GB memory. Read this [article](https://www.elastic.co/guide/en/elasticsearch/reference/current/heap-size.html) for configure suitable resource usage for your cluster.
 ```yaml
 - name: elasticsearch
   resources:
@@ -35,7 +35,7 @@ kubectl apply -f 04_elasticsearch_operator_kibana.yaml
 ```
 For allowing logs from Kubernetes running application to be collected and stored in Elasticsearch we need to deploy filebeat/fluentd/logstash.
 
-Due to mechanics how Elastic operator works, Elasticsearch is exposed via usual `9200` port, but leveraging tls encryption and also have random generated password. In example below we leverage Filebeat, but you could use any other solutions for your convinience.  In order to properly configure Filebeat, we need to get password and *CA* certificate.
+Due to mechanics how Elastic operator works, Elasticsearch is exposed via usual `9200` port, but applying tls encryption and also have random generated password. In example below we utilize Filebeat, but you could use any other solutions for your convinience.  In order to properly configure Filebeat, we need to get password and *CA* certificate.
 
 ```bash
 kubectl get secret es-log-es-http-certs-public -o json --namespace=elastic-system | jq '.metadata.namespace = "kube-system"' | jq 'del(.metadata.creationTimestamp,.metadata.ownerReferences,.metadata.resourceVersion,.metadata.selfLink,.metadata.uid)' | kubectl --namespace=kube-system apply -f -
