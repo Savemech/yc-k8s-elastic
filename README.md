@@ -24,6 +24,14 @@ With following specific details:
   - name: ES_JAVA_OPTS
     value: "-Xms6g -Xmx6g"
 ```
+If you want to dedicate nodes that would run elasticsearch write ID of your kubernetes IG.
+Otherwise delete following:
+```yaml
+        nodeSelector:
+          yandex.cloud/node-group-id: <dedicated-ig-for-elasticsearch>
+```
+
+
 For more detail on configuring operator, you may refer to this [docs](https://github.com/elastic/cloud-on-k8s/tree/master/docs)
 
 ## Installation
