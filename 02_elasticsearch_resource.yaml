@@ -1,36 +1,52 @@
-apiVersion: elasticsearch.k8s.elastic.co/v1alpha1
+apiVersion: elasticsearch.k8s.elastic.co/v1
 kind: Elasticsearch
 metadata:
   name: es-log
   namespace: elastic-system
 spec:
-  version: "7.3.0"
-  http:
-    tls:
-      selfSignedCertificate:
-        subjectAltNames:
-        - dns: es-log-es-http.elastic-system.svc.cluster.local
-        - dns: es-log-es-http.elastic-system.svc
-        - dns: es-log-es-http
-  nodes:
+  version: 7.6.2
+  nodeSets:
   - name: quickstart
+    count: 5
     config:
-      node.attr.attr_name: attr_value
+      node.master: true
+      node.data: true
+      node.ingest: true
     podTemplate:
       spec:
+        nodeSelector:
+          yandex.cloud/node-group-id: catfjknik0lro750edv3
+        http:
+          tls:
+            selfSignedCertificate:
+              subjectAltNames:
+              - dns: es-log-es-http.elastic-system.svc.cluster.local
+              - dns: es-log-es-http.elastic-system.svc
+              - dns: es-log-es-http
+              - dns: logs.svc.cluster.local
         containers:
         - name: elasticsearch
           resources:
             requests:
               memory: 8Gi
-              cpu: 4
+              cpu: 4000m
             limits:
               memory: 10Gi
-              cpu: 8
+              cpu: 4000m
           env:
           - name: ES_JAVA_OPTS
             value: "-Xms6g -Xmx6g"
-    nodeCount: 5
+        initContainers:
+        - name: sysctl
+          securityContext:
+            privileged: true
+          command: ['sh', '-c', 'sysctl -w vm.max_map_count=262144']
+        - name: install-plugins
+          command: 
+          - sh
+          - -c
+          - |
+            bin/elasticsearch-plugin install --batch repository-s3
     volumeClaimTemplates:
     - metadata:
         name: elasticsearch-data
@@ -40,4 +56,4 @@ spec:
         storageClassName: yc-network-ssd
         resources:
           requests:
-            storage: 300Gi
+            storage: 1280Gi
