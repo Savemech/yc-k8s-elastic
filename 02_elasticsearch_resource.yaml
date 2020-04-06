@@ -15,7 +15,7 @@ spec:
     podTemplate:
       spec:
         nodeSelector:
-          yandex.cloud/node-group-id: catfjknik0lro750edv3
+          yandex.cloud/node-group-id: <dedicated-ig-for-elasticsearch>
         http:
           tls:
             selfSignedCertificate:
